@@ -12,7 +12,7 @@ class AdminCategory(admin.ModelAdmin):
     
 @admin.register(Item)
 class AdminItem(admin.ModelAdmin):
-    list_display = ['id', 'name', 'category', 'price']
+    list_display = ['id', 'name', 'category', 'price', 'description']
     list_filter = ['price']
     search_fields = ['name', 'description']
     list_editable = ['name', 'description', 'price']

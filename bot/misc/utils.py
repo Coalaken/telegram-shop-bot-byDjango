@@ -1,14 +1,8 @@
 from colorama import Fore
 
-
-# STARTUP_MESSAGE = Fore.BLUE + """
-# ░██████╗██╗░░░██╗░█████╗░░█████╗░███████╗░██████╗░██████╗
-# ██╔════╝██║░░░██║██╔══██╗██╔══██╗██╔════╝██╔════╝██╔════╝
-# ╚█████╗░██║░░░██║██║░░╚═╝██║░░╚═╝█████╗░░╚█████╗░╚█████╗░
-# ░╚═══██╗██║░░░██║██║░░██╗██║░░██╗██╔══╝░░░╚═══██╗░╚═══██╗
-# ██████╔╝╚██████╔╝╚█████╔╝╚█████╔╝███████╗██████╔╝██████╔╝
-# ╚═════╝░░╚═════╝░░╚════╝░░╚════╝░╚══════╝╚═════╝░╚═════╝░
-# """ + Fore.GREEN
+CATS_URL = 'http://127.0.0.1:8000/api/v1/shop/cats/'
+ITEMS_URL = 'http://127.0.0.1:8000/api/v1/shop/items/'
+ITEMS_BY_CAT_URL = 'http://127.0.0.1:8000/api/v1/shop/items/{}/'
 
 
 STARTUP_MESSAGE = [
@@ -26,4 +20,11 @@ async def print_success_message():
     for line in STARTUP_MESSAGE:
        
         print(line[1] + line[0])
-    print('\n' * 5)
+    print(Fore.RESET + '\n' * 5)
+    
+    
+GREETING = """
+Hello! My name is Miku Saller
+Welcome to Miku Store!
+    Please use keyboard for do something!
+"""
