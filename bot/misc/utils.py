@@ -2,7 +2,6 @@ from colorama import Fore
 
 CATS_URL = 'http://127.0.0.1:8000/api/v1/shop/cats/'
 ITEMS_URL = 'http://127.0.0.1:8000/api/v1/shop/items/'
-ITEMS_BY_CAT_URL = 'http://127.0.0.1:8000/api/v1/shop/items/{}/'
 
 
 STARTUP_MESSAGE = [
