@@ -29,7 +29,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'shop.apps.ShopConfig',    
+    'shop.apps.ShopConfig',   
+    'cart.appd.CartConfig', 
 ]
 
 CORS_ORIGIN_ALLOW_ALL = True

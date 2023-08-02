@@ -1,10 +1,13 @@
+import asyncio
+import subprocess
 from aiogram import Bot, Dispatcher, executor
 
-from misc.utils import STARTUP_MESSAGE
+from bot.misc import print_success_message
 
-
-async def __on_startup() -> None:
-    print(STARTUP_MESSAGE)
+    
+    
+async def __on_startup(_) -> None:
+    await print_success_message()
 
 
 def start_bot():
