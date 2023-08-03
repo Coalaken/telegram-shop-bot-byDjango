@@ -14,6 +14,14 @@ STARTUP_MESSAGE = [
 ]
 
 
+CATEGORY_MESSAGE =  '''All right!
+In our store we have the following categories
+                     ╱|、
+                    (˚ˎ 。7  
+                     |、˜〵          
+                     じしˍ,)ノ'''
+
+
 async def print_success_message():
     print('\n' * 9)
     for line in STARTUP_MESSAGE:
