@@ -8,3 +8,5 @@ class AdminAddItem(StatesGroup):
     price = State()
     
 
+class AdminAddCat(StatesGroup):
+    name = State()
