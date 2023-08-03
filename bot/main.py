@@ -2,8 +2,8 @@ from aiogram import Bot, Dispatcher, executor
 
 from bot.misc import print_success_message
 from bot.handlers.user import register_user_handlers
-from bot.misc.env import TgKeys
-    
+from bot.misc.env import TgKeys   
+
     
 async def __on_startup(_) -> None:
     await print_success_message()

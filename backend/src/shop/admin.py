@@ -8,7 +8,7 @@ class AdminCategory(admin.ModelAdmin):
     list_display = ['id', 'name']
     list_editable = ['name']
     search_fields = ['name']
-    
+    prepopulated_fields = {'slug': ('name', )}   
     
 @admin.register(Item)
 class AdminItem(admin.ModelAdmin):
@@ -17,3 +17,4 @@ class AdminItem(admin.ModelAdmin):
     search_fields = ['name', 'description']
     list_editable = ['name', 'description', 'price']
     raw_id_fields = ['category']
+    prepopulated_fields = {'slug': ('name', )} 

@@ -1,4 +1,3 @@
-from typing import Iterable, Optional
 from django.db import models
 from django.utils.text import slugify
 
@@ -13,8 +12,12 @@ class Category(models.Model):
         return super().save(*args, **kwargs)
     
     def __str__(self) -> str:
-        return self.name
+        return str(self.name)
     
+    class Meta:
+        verbose_name_plural = 'Категории'
+        verbose_name = 'Категория'
+
     
 class Item(models.Model):
     name = models.CharField(verbose_name='Название',
