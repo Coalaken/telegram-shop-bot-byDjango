@@ -14,18 +14,15 @@ from bot.states import AdminAddItem
 
 def register_user_handlers(dp: Dispatcher, bot: Bot):
     
-    @dp.message_handler(commands=['start', 'help'])
     async def first_commands(message: Message) -> None:
         await bot.send_message(message.from_user.id, GREETING, reply_markup=menu_keyboard)
     
-    @dp.message_handler(commands=['categories'])
     async def show_categories(message: Message) -> None:
         data = await get_data_from_server(CATS_URL)
         cats = {int(cat.get('id')): cat.get('name') for cat in data}
         text = CATEGORY_MESSAGE
         await bot.send_message(message.from_user.id, text, reply_markup=create_keyboard(cats))
         
-    @dp.callback_query_handler(Text(startswith='cat_', ignore_case=True))
     async def category_callback_handler(callback_query: CallbackQuery):
         cat_id = callback_query.data.split('_')[1]
         data = await get_data_from_server(ITEMS_URL, c_id=cat_id)
@@ -33,48 +30,59 @@ def register_user_handlers(dp: Dispatcher, bot: Bot):
         for item in data:
             await callback_query.message.answer('\n'.join([item.get('name'), item.get('price')]))
     
-    @dp.message_handler(commands=['products'])
     async def show_items(message: Message) -> None:
         data = await get_data_from_server(ITEMS_URL)
         for item in data:
             await bot.send_message(message.from_user.id, '\n'.join([item.get('name'), item.get('price')]))
             
-    @dp.message_handler(commands=['add'], state="*")
     async def add_item(message: Message) -> None:
         await AdminAddItem.name.set()
         await message.reply('Write the name!')            
 
-    @dp.message_handler(state=AdminAddItem.name)
     async def set_name(message: Message, state: FSMContext) -> None:
         async with state.proxy() as data:
             data['name'] = message.text
         await AdminAddItem.next()
         await message.reply('Add an image')
         
-    @dp.message_handler(state=AdminAddItem.img)
     async def set_image(message: Message, state: FSMContext) -> None:
         async with state.proxy() as data:
+            print(message.photo[0].file_id)
             data['img'] = message.photo[0].file_id
         await AdminAddItem.next()
         await message.reply('Add a description')
 
-    @dp.message_handler(state=AdminAddItem.description)
     async def set_description(message: Message, state: FSMContext) -> None:
         async with state.proxy() as data:
             data['description'] = message.text
         await AdminAddItem.next()
         await message.reply('Set the price')
         
-    @dp.message_handler(state=AdminAddItem.price)
     async def set_price(message: Message, state: FSMContext) -> None:
         async with state.proxy() as data:
-            data['price'] = round(Decimal(message.text), 2)
+            try:
+                data['price'] = round(Decimal(message.text), 2)
+            except Exception as e:
+                await message.reply('invalid price! Try again!')
+                await state.finish()                
         await state.finish()
         
-    @dp.message_handler(Text(equals='cancel', ignore_case=True), state="*")
     async def cancel(message: Message, state: FSMContext) -> None:
         current_state = state.get_state()
         if current_state is None:
             return
         await state.finish()
         await message.reply('Canceled')
+        
+    dp.register_message_handler(first_commands, commands=['start', 'help'])
+    dp.register_message_handler(show_categories, commands=['categories'])
+    dp.register_callback_query_handler(category_callback_handler, Text(startswith='cat_', ignore_case=True))
+    dp.register_message_handler(show_items, commands=['products'])
+    dp.register_message_handler(cancel, Text(equals='cancel', ignore_case=True), state="*")
+    dp.register_message_handler(add_item, commands=['add'], state=None)
+    dp.register_message_handler(set_name, state=AdminAddItem.name)
+    dp.register_message_handler(set_image, state=AdminAddItem.img, content_types=['photo'])
+    dp.register_message_handler(set_description, state=AdminAddItem.description)
+    dp.register_message_handler(set_price, state=AdminAddItem.price)
+    
+    
