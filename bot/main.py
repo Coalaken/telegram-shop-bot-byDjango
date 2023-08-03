@@ -1,4 +1,5 @@
 from aiogram import Bot, Dispatcher, executor
+from aiogram.contrib.fsm_storage.memory import MemoryStorage
 
 from bot.misc import print_success_message
 from bot.handlers.user import register_user_handlers
@@ -11,7 +12,7 @@ async def __on_startup(_) -> None:
     
 def start_bot(): 
     bot = Bot(token=TgKeys.TOKEN)
-    dp = Dispatcher(bot)   
+    dp = Dispatcher(bot, storage=MemoryStorage())   
     
     register_user_handlers(dp, bot)
     

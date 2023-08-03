@@ -2,6 +2,7 @@ from colorama import Fore
 
 CATS_URL = 'http://127.0.0.1:8000/api/v1/shop/cats/'
 ITEMS_URL = 'http://127.0.0.1:8000/api/v1/shop/items/'
+SQLITE_FILE = 'bot/../db.sqlite3'
 
 
 STARTUP_MESSAGE = [
@@ -31,7 +32,7 @@ async def print_success_message():
     
     
 GREETING = """
-Hello! My name is Miku Saller
+Hello! My name is Miku Vendor
 Welcome to Miku Store!
     Please use keyboard for do something!
 """
