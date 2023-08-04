@@ -21,3 +21,16 @@ async def create_category(url: str, name: str) -> None:
     async with ClientSession() as session:
         resp = await session.post(url, json=data)
         print(resp.status)
+        
+        
+async def create_item(url: str, data) -> None:
+    data = {
+        "name": data['name'].title().strip(),
+        "slug": data['name'].lower().strip(),
+        "img": data['img'],
+        "description": data['description'],
+        "price": data['price'],
+    }
+    async with ClientSession() as session:
+        resp = await session.post(url, json=data)
+        print(resp.content)

@@ -6,14 +6,26 @@ from aiogram.types import Message
 from aiogram.dispatcher.filters import Text
 
 from bot.states import AdminAddItem, AdminAddCat
-from bot.database.methods.create import create_product
-from bot.misc.fetch_data import create_category
-from bot.misc.utils import CATS_URL
+# from bot.database.methods.create import create_product
+from bot.misc.fetch_data import create_category, create_item
+from bot.misc.utils import CATS_URL, ADMIN_ID, ITEMS_URL
+
+
+def auth(func):
+    async def wrapper(message: Message, state: FSMContext=None):
+        if message.from_user.id != ADMIN_ID:
+            await message.answer('Permission denied...')
+            return 
+        return await func(message)
+    return wrapper
 
 
 def register_admin_handlers(dp: Dispatcher, bot: Bot):
     
-    """Product creation process"""
+    """
+    Product creation process
+    """
+    @auth
     async def add_item(message: Message) -> None:
         await AdminAddItem.name.set()
         await message.reply('Write the name!')            
@@ -26,11 +38,11 @@ def register_admin_handlers(dp: Dispatcher, bot: Bot):
         
     async def set_image(message: Message, state: FSMContext) -> None:
         async with state.proxy() as data:
-            print(message.photo[0].file_id)
+            # print(message.photo[0].file_id)
             data['img'] = message.photo[0].file_id
         await AdminAddItem.next()
-        await message.reply('Add a description')
-
+        await message.reply('Add a description')    
+        
     async def set_description(message: Message, state: FSMContext) -> None:
         async with state.proxy() as data:
             data['description'] = message.text
@@ -39,18 +51,21 @@ def register_admin_handlers(dp: Dispatcher, bot: Bot):
         
     async def set_price(message: Message, state: FSMContext) -> None:
         async with state.proxy() as data:
-            try:
-                data['price'] = round(Decimal(message.text.strip()), 2)
-                print(data)
-                await create_product(data)
-            except Exception as e:
-                print(e)
-                await message.reply('invalid price! Try again!')
-                await state.finish()               
+            # try:
+            data['price'] = float(round(Decimal(message.text.strip()), 2))
+            await create_item(ITEMS_URL, data)
+            await message.reply('Created!')
+            # except Exception as e:
+            #     print(e)
+            #     await message.reply('invalid price! Try again!')
+            #     await state.finish()               
 
         await state.finish()
         
-    """Category creation"""
+    """
+    Category creation process
+    """
+    @auth
     async def add_category(message: Message) -> None:
         await AdminAddCat.name.set()
         await message.answer('Set the name')
@@ -59,7 +74,9 @@ def register_admin_handlers(dp: Dispatcher, bot: Bot):
         await create_category(CATS_URL, message.text)
         await state.finish()
     
-    """Cancels any process"""
+    """
+    Function that stops any process
+    """
     async def cancel(message: Message, state: FSMContext) -> None:
         current_state = state.get_state()
         if current_state is None:

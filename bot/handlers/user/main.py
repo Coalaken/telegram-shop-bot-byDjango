@@ -29,7 +29,12 @@ def register_user_handlers(dp: Dispatcher, bot: Bot):
     async def show_items(message: Message) -> None:
         data = await get_data_from_server(ITEMS_URL)
         for item in data:
-            await bot.send_message(message.from_user.id, '\n'.join([item.get('name'), item.get('price')]))
+            try:
+                await bot.send_photo(message.from_user.id,
+                                    item['img'],
+                                    f"{item['name']}\n ${item['price']}")
+            except Exception as e:
+                await bot.send_message(message.from_user.id, f"{item['name']}\n ${item['price']}")
         
     dp.register_message_handler(first_commands, commands=['start', 'help'])
     dp.register_message_handler(show_categories, commands=['categories'])

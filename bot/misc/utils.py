@@ -1,6 +1,6 @@
 from colorama import Fore
 
-ADMIN_ID = '1917113649'
+ADMIN_ID = 1917113649
 
 CATS_URL = 'http://127.0.0.1:8000/api/v1/shop/cats/'
 ITEMS_URL = 'http://127.0.0.1:8000/api/v1/shop/items/'

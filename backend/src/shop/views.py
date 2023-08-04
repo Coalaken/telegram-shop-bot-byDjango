@@ -32,6 +32,13 @@ class ItemAPIView(APIView):
         except (Exception, Item.DoesNotExist):
             return Response({'message': 'Empty'}, status=status.HTTP_400_BAD_REQUEST) 
         
+    def post(self, request, *args, **kwargs):
+        serializer = ItemSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response({'message': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+        
 
 class ItemByCategoryListAPIView(APIView):
     def get(self, request, cat_id, *args, **kwargs):

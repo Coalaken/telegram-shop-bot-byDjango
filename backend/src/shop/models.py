@@ -23,8 +23,8 @@ class Item(models.Model):
     name = models.CharField(verbose_name='Название',
                             max_length=255)
     slug = models.SlugField(max_length=255) 
-    img = models.TextField() 
-    description = models.TextField()
+    img = models.TextField(null=True) 
+    description = models.TextField(null=True)
     price = models.DecimalField(max_digits=6,
                                 decimal_places=2)
     category = models.ForeignKey(Category,
