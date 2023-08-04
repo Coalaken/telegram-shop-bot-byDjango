@@ -6,7 +6,9 @@ from aiogram.types import Message
 from aiogram.dispatcher.filters import Text
 
 from bot.states import AdminAddItem, AdminAddCat
-from bot.database.methods.create import create_product, create_category
+from bot.database.methods.create import create_product
+from bot.misc.fetch_data import create_category
+from bot.misc.utils import CATS_URL
 
 
 def register_admin_handlers(dp: Dispatcher, bot: Bot):
@@ -39,6 +41,7 @@ def register_admin_handlers(dp: Dispatcher, bot: Bot):
         async with state.proxy() as data:
             try:
                 data['price'] = round(Decimal(message.text.strip()), 2)
+                print(data)
                 await create_product(data)
             except Exception as e:
                 print(e)
@@ -53,7 +56,7 @@ def register_admin_handlers(dp: Dispatcher, bot: Bot):
         await message.answer('Set the name')
         
     async def set_category_name(message: Message, state: FSMContext) -> None:
-        await create_category(message.text)
+        await create_category(CATS_URL, message.text)
         await state.finish()
     
     """Cancels any process"""
