@@ -34,3 +34,11 @@ async def create_item(url: str, data) -> None:
     async with ClientSession() as session:
         resp = await session.post(url, json=data)
         print(resp.content)
+
+
+# TO-DO: допимать функцию удаления
+async def delete_item(url: str, item_id: int):
+    url += f'{item_id}/'
+    async with ClientSession() as session:
+        resp = await session.delete(url)
+        print(resp.status)

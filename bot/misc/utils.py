@@ -4,6 +4,7 @@ ADMIN_ID = 1917113649
 
 CATS_URL = 'http://127.0.0.1:8000/api/v1/shop/cats/'
 ITEMS_URL = 'http://127.0.0.1:8000/api/v1/shop/items/'
+ITEM_DELETE_URL = 'http://127.0.0.1:8000/api/v1/shop/delete/items/'
 SQLITE_FILE = 'bot/../db.sqlite3'
 
 

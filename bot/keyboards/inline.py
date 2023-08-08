@@ -17,3 +17,10 @@ def create_keyboard(buttons_name: Dict[int, str]) -> InlineKeyboardMarkup:
     keyboard = InlineKeyboardMarkup()
     keyboard.add(*buttons)
     return keyboard
+
+def delete_update_item_keyboard(item_id: int) -> InlineKeyboardMarkup:
+    delete = InlineKeyboardButton(text='Delete', callback_data=f'delete_{item_id}')
+    update = InlineKeyboardButton(text='Update', callback_data=f'update_{item_id}')
+    
+    keyboard = InlineKeyboardMarkup().add(delete, update)
+    return keyboard
