@@ -62,11 +62,7 @@ def register_admin_handlers(dp: Dispatcher, bot: Bot):
             # try:
             data['price'] = float(round(Decimal(message.text.strip()), 2))
             await create_item(ITEMS_URL, data)
-            await message.reply('Created!')
-            # except Exception as e:
-            #     print(e)
-            #     await message.reply('invalid price! Try again!')
-            #     await state.finish()               
+            await message.reply('Created!')         
 
         await state.finish()
         
@@ -168,7 +164,7 @@ def register_admin_handlers(dp: Dispatcher, bot: Bot):
          
     async def set_item_img(message: Message, state: FSMContext):
         async with state.proxy() as data:
-            data['img'] = message.photo.id 
+            data['img'] = message.photo[0].file_id
             
     #########################################
     async def save_(callback_query: CallbackQuery) -> None:
@@ -177,8 +173,8 @@ def register_admin_handlers(dp: Dispatcher, bot: Bot):
         
     async def save_updates(message: Message, state: FSMContext):
         if message.text.lower() == 'y':
-            print('data')
-            async with state.proxy() as data:
+            async with state.proxy() as data: 
+                print(data)
                 expected = ['name', 'price', 'descriproin', 'img']
                 item_data = {}
                 for el in expected:
@@ -211,7 +207,7 @@ def register_admin_handlers(dp: Dispatcher, bot: Bot):
     dp.register_message_handler(set_item_description, state=AdminUpdateItem.description)
     
     dp.register_callback_query_handler(set_img_state, Text(equals='state_img', ignore_case=True), state="*")
-    dp.register_message_handler(set_item_img, state=AdminUpdateItem.img)
+    dp.register_message_handler(set_item_img, state=AdminUpdateItem.img, content_types=['photo'])
     
     dp.register_callback_query_handler(save_, Text(equals='state_save', ignore_case=True), state="*")
     dp.register_message_handler(save_updates, state=AdminUpdateItem.save)

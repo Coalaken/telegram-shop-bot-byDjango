@@ -2,6 +2,7 @@ import logging
 
 from aiogram import Bot, Dispatcher, executor
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
+from aiogram.contrib.fsm_storage.redis import RedisStorage2
 
 from bot.misc import print_success_message
 from bot.handlers.user import register_user_handlers
