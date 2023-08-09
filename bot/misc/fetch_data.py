@@ -1,14 +1,10 @@
-import ujson
-
 from aiohttp import ClientSession
-
 
 
 async def get_data_from_server(url: str, c_id: int=None):
     async with ClientSession() as session:
         if c_id:
             url += f'{c_id}/'
-            # print(url)
         async with session.get(url) as res:
             return await res.json()
         
@@ -20,7 +16,6 @@ async def create_category(url: str, name: str) -> None:
     }
     async with ClientSession() as session:
         resp = await session.post(url, json=data)
-        print(resp.status)
         
         
 async def create_item(url: str, data) -> None:
@@ -33,12 +28,35 @@ async def create_item(url: str, data) -> None:
     }
     async with ClientSession() as session:
         resp = await session.post(url, json=data)
-        print(resp.content)
 
 
-# TO-DO: допимать функцию удаления
 async def delete_item(url: str, item_id: int):
     url += f'{item_id}/'
     async with ClientSession() as session:
         resp = await session.delete(url)
-        print(resp.status)
+
+
+async def get_user_cart(url:str, user_id: int): 
+    async with ClientSession() as sessoion:
+        url += f'{user_id}/' 
+        resp = await sessoion.get(url)
+        return await resp.json() 
+    
+    
+async def qadd_to_cart(url: str, user_id: int, product_id: int):
+    url += f'{user_id}/{product_id}/'
+    async with ClientSession() as session:
+        await session.post(url)
+
+
+async def qdelete_from_cart(url: str, user_id: int, product_id: int):
+    url += f'{user_id}/{product_id}/'
+    async with ClientSession() as session:
+        await session.delete(url)
+        
+        
+
+
+
+
+
