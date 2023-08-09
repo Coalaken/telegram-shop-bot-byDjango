@@ -19,4 +19,4 @@ def admin_keyboard():
         KeyboardButton(text='/create_cat'),
         KeyboardButton(text='/add')
     ]
-    return keyboard.add(buttons[0]).row(buttons[1], buttons[2])
+    return keyboard.add(KeyboardButton(text='/help')).add(buttons[0]).row(buttons[1], buttons[2])

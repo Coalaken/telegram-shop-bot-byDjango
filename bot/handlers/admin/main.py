@@ -91,6 +91,7 @@ def register_admin_handlers(dp: Dispatcher, bot: Bot):
     """
     Edit items
     """
+    @auth
     async def edit_items(message: Message) -> None:
         data = await get_data_from_server(ITEMS_URL)
         for item in data:
@@ -102,7 +103,7 @@ def register_admin_handlers(dp: Dispatcher, bot: Bot):
                                        reply_markup=delete_update_item_keyboard(item.get('id')))
                 
     """
-    Delete
+    Delete item
     """
     async def delete_callback(callback_query: CallbackQuery) -> None:
         item_id = int(callback_query.data.split('_')[1])
@@ -110,7 +111,7 @@ def register_admin_handlers(dp: Dispatcher, bot: Bot):
         await callback_query.message.answer('Deleted')
         
     """
-    Update process
+    Update item
     """
     async def update_callback(callback_query: CallbackQuery, state: FSMContext) -> None:
         item_id = callback_query.data.split('_')[1]
@@ -119,9 +120,10 @@ def register_admin_handlers(dp: Dispatcher, bot: Bot):
             data['id'] = item_id
         await callback_query.answer()
         await callback_query.message.answer('Зick something >>>', reply_markup=update_keyboard())
-    
-    ######################################
-    
+        
+    """
+    Update name
+    """
     async def set_name_state(callback_query: CallbackQuery) -> None:
         await callback_query.message.answer('Name:')
         await AdminUpdateItem.name.set()
@@ -131,9 +133,10 @@ def register_admin_handlers(dp: Dispatcher, bot: Bot):
         async with state.proxy() as data: 
             data['name'] = message.text.lower()    
         await AdminUpdateItem.price.set()
-        
-    ######################################
     
+    """
+    Update price
+    """        
     async def set_price_state(callback_query: CallbackQuery) -> None:
         await callback_query.message.answer('Price:')
         await AdminUpdateItem.price.set()
@@ -143,9 +146,10 @@ def register_admin_handlers(dp: Dispatcher, bot: Bot):
         async with state.proxy() as data:
             data['price'] = float(round(Decimal(message.text.strip()), 2))
         await AdminUpdateItem.start.set()
-
-    ########################################
     
+    """
+    Update description
+    """
     async def set_desc_sate(callback_query: CallbackQuery) -> None:
         await callback_query.message.answer('Description:')        
         await AdminUpdateItem.description.set()
@@ -155,8 +159,9 @@ def register_admin_handlers(dp: Dispatcher, bot: Bot):
         async with state.proxy() as data:
             data['description'] = message.text
     
-    #########################################
-         
+    """
+    Update image
+    """         
     async def set_img_state(callback_query: CallbackQuery) -> None:
         await callback_query.message.answer('IMG:')
         await AdminUpdateItem.img.set()
@@ -166,7 +171,9 @@ def register_admin_handlers(dp: Dispatcher, bot: Bot):
         async with state.proxy() as data:
             data['img'] = message.photo[0].file_id
             
-    #########################################
+    """
+    Save
+    """
     async def save_(callback_query: CallbackQuery) -> None:
         await AdminUpdateItem.save.set()
         await callback_query.answer('[y/N]', show_alert=True)
@@ -174,7 +181,6 @@ def register_admin_handlers(dp: Dispatcher, bot: Bot):
     async def save_updates(message: Message, state: FSMContext):
         if message.text.lower() == 'y':
             async with state.proxy() as data: 
-                print(data)
                 expected = ['name', 'price', 'descriproin', 'img']
                 item_data = {}
                 for el in expected:
@@ -211,3 +217,9 @@ def register_admin_handlers(dp: Dispatcher, bot: Bot):
     
     dp.register_callback_query_handler(save_, Text(equals='state_save', ignore_case=True), state="*")
     dp.register_message_handler(save_updates, state=AdminUpdateItem.save)
+    
+    # TO-DO 
+    # - price validator
+    # - other validators 
+    # - docker+
+    # - redis Memory
