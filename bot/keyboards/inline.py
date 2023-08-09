@@ -39,4 +39,3 @@ def buy_delete_cart(item_id: int, user_id):
     delete = InlineKeyboardButton(text='delete', callback_data=f'cd_{user_id}_{item_id}')
 
     return InlineKeyboardMarkup().row(buy, delete)
-

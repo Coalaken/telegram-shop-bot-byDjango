@@ -25,13 +25,17 @@ from bot.keyboards.inline import (
     delete_update_item_keyboard,
     buy_add_cart
 )
-from bot.keyboards.reply import menu_keyboard
+from bot.keyboards.reply import user_keyboard, admin_keyboard
 
 
 def register_user_handlers(dp: Dispatcher, bot: Bot):
+    
+    async def admin(message: Message) -> None:
+        await message.answer('OK!', reply_markup=admin_keyboard())
+        await message.delete()
 
     async def first_commands(message: Message) -> None:
-        await bot.send_message(message.from_user.id, GREETING, reply_markup=menu_keyboard)
+        await bot.send_message(message.from_user.id, GREETING, reply_markup=user_keyboard())
 
     async def show_categories(message: Message) -> None:
         data = await get_data_from_server(CATS_URL)
@@ -54,7 +58,7 @@ def register_user_handlers(dp: Dispatcher, bot: Bot):
                                     item['img'],
                                     f"{item['name']}\n ${item['price']}",
                                     reply_markup=buy_add_cart(item['id'],
-                                                              message.from_user.id)                                                              )
+                                                              message.from_user.id))
             except Exception as e:
                 await bot.send_message(message.from_user.id,
                                        f"{item['name']}\n ${item['price']}",
@@ -116,6 +120,8 @@ def register_user_handlers(dp: Dispatcher, bot: Bot):
                                 data[-1],
                                 )
 
+    dp.register_message_handler(admin, commands=['admin'])
+
     dp.register_message_handler(first_commands, commands=['start', 'help'])
     dp.register_message_handler(show_categories, commands=['categories'])
     dp.register_callback_query_handler(category_callback_handler, Text(startswith='cat_', ignore_case=True))
@@ -129,4 +135,3 @@ def register_user_handlers(dp: Dispatcher, bot: Bot):
     dp.register_callback_query_handler(delete_from_cart, Text(startswith='cd_', ignore_case=True))
     dp.register_callback_query_handler(buy, Text(startswith='buy_', ignore_case=True))
     
-    # доделать удаление из корзины
