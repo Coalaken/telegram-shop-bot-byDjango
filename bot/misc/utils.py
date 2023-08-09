@@ -19,6 +19,9 @@ SQLITE_FILE = 'bot/../db.sqlite3'
 CART_URL = 'http://127.0.0.1:8000/api/v1/shop/cart/'
 CART_ADD_URL = 'http://127.0.0.1:8000/api/v1/shop/cart/add/'
 CART_DEL_URL = 'http://127.0.0.1:8000/api/v1/shop/cart/del/'
+CATEGORY_DELETE_URL = 'http://127.0.0.1:8000/api/v1/shop/cat/delete/'
+ITEM_UPDATE_URL = 'http://127.0.0.1:8000/api/v1/shop/items/item/'
+
 
 CATEGORY_MESSAGE =  '''All right!
 In our store we have the following categories

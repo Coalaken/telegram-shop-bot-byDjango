@@ -10,3 +10,11 @@ class AdminAddItem(StatesGroup):
 
 class AdminAddCat(StatesGroup):
     name = State()
+
+class AdminUpdateItem(StatesGroup):
+    start = State()
+    name = State()
+    img = State()
+    description = State()
+    price = State()
+    save = State()

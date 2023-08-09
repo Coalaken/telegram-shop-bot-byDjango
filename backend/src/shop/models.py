@@ -21,12 +21,15 @@ class Category(models.Model):
     
 class Item(models.Model):
     name = models.CharField(verbose_name='Название',
-                            max_length=255)
-    slug = models.SlugField(max_length=255) 
+                            max_length=255,
+                            blank=True)
+    slug = models.SlugField(max_length=255,
+                            blank=True) 
     img = models.TextField(null=True) 
     description = models.TextField(null=True)
     price = models.DecimalField(max_digits=6,
-                                decimal_places=2)
+                                decimal_places=2,
+                                blank=True)
     category = models.ForeignKey(Category,
                                  on_delete=models.SET_NULL,
                                  null=True,

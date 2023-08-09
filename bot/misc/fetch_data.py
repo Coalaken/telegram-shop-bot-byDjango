@@ -33,7 +33,7 @@ async def create_item(url: str, data) -> None:
 async def delete_item(url: str, item_id: int):
     url += f'{item_id}/'
     async with ClientSession() as session:
-        resp = await session.delete(url)
+        await session.delete(url)
 
 
 async def get_user_cart(url:str, user_id: int): 
@@ -53,6 +53,12 @@ async def qdelete_from_cart(url: str, user_id: int, product_id: int):
     url += f'{user_id}/{product_id}/'
     async with ClientSession() as session:
         await session.delete(url)
+        
+        
+async def update_item(url: str, /, item_id: int, data):
+    url += f'{item_id}/'
+    async with ClientSession() as session: 
+        await session.put(url, json=data)
         
         
 

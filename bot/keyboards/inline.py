@@ -39,3 +39,15 @@ def buy_delete_cart(item_id: int, user_id):
     delete = InlineKeyboardButton(text='delete', callback_data=f'cd_{user_id}_{item_id}')
 
     return InlineKeyboardMarkup().row(buy, delete)
+
+
+def update_keyboard():
+    keyboard = InlineKeyboardMarkup()
+    buttons = [
+        InlineKeyboardButton(text='name', callback_data='state_name'),
+        InlineKeyboardButton(text='img', callback_data='state_img'),
+        InlineKeyboardButton(text='description', callback_data='state_desc'),
+        InlineKeyboardButton(text='price', callback_data='state_price'),
+        InlineKeyboardButton(text='save', callback_data='state_save')
+    ]
+    return keyboard.row(buttons[0], buttons[1]).row(buttons[2], buttons[3]).add(buttons[-1])

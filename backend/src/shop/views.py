@@ -2,7 +2,9 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view
+
 from django.views.decorators.http import require_POST
+from django.shortcuts import get_object_or_404
 
 from .models import Category, Item
 from .seriaizers import ItemSerializer, CategorySerializer
@@ -23,7 +25,20 @@ class CategoryListAPIView(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        
+    
+
+class CategoryDetailAPIView(APIView):
+    
+    def get(self, request, cat_id) -> Response:
+        category = get_object_or_404(Category, id=cat_id)
+        serializer = CategorySerializer(category, many=False)
+        return Response(serializer.data, status=status.HTTP_204_NO_CONTENT)        
+    
+    def delete(self, request, cat_id) -> Response:
+        category = get_object_or_404(Category, id=cat_id)
+        category.delete()
+        return Response({'message': 'Deleted!'}, status=status.HTTP_204_NO_CONTENT)
+
 
 class ItemListAPIView(APIView):
     
@@ -60,6 +75,14 @@ class ItemDeteilAPIView(APIView):
         item = self._get_item(item_id)
         item.delete()
         return Response({'message': 'Deleted'}, status=status.HTTP_204_NO_CONTENT)
+    
+    def put(self, request, item_id):
+        item = self._get_item(item_id)
+        serializer = ItemSerializer(item, request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response({'message': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
     
     
 class ItemByCategoryListAPIView(APIView):
