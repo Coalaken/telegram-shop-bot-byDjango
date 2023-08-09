@@ -45,7 +45,17 @@ def register_user_handlers(dp: Dispatcher, bot: Bot):
         data = await get_data_from_server(ITEMS_URL, c_id=cat_id)
         await callback_query.answer(cache_time=1)
         for item in data:
-            await callback_query.message.answer('\n'.join([item.get('name'), item.get('price')]))
+            try:
+                await bot.send_photo(callback_query.from_user.id,
+                                    item['img'],
+                                    f"{item['name']}\n ${item['price']}",
+                                    reply_markup=buy_add_cart(item['id'],
+                                                              callback_query.from_user.id))
+            except Exception as e:
+                await bot.send_message(callback_query.from_user.id,
+                                       f"{item['name']}\n ${item['price']}",
+                                       reply_markup=buy_add_cart(item['id'],
+                                                                 callback_query.from_user.id))
 
     async def show_items(message: Message) -> None:
         data = await get_data_from_server(ITEMS_URL)
