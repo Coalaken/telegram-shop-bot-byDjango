@@ -24,3 +24,19 @@ def delete_update_item_keyboard(item_id: int) -> InlineKeyboardMarkup:
     
     keyboard = InlineKeyboardMarkup().add(delete, update)
     return keyboard
+
+
+def buy_add_cart(item_id: int, user_id):
+    add = InlineKeyboardButton(text='+', callback_data=f'atc_{user_id}_{item_id}')
+    buy = InlineKeyboardButton(text='buy', callback_data=f'buy_{item_id}')
+
+    keyboard = InlineKeyboardMarkup(row_width=1).row(add, buy)
+    return keyboard
+
+
+def buy_delete_cart(item_id: int, user_id):
+    buy = InlineKeyboardButton(text='buy', callback_data=f'buy_{item_id}')
+    delete = InlineKeyboardButton(text='delete', callback_data=f'cd_{user_id}_{item_id}')
+
+    return InlineKeyboardMarkup().row(buy, delete)
+
