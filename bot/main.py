@@ -15,7 +15,7 @@ async def __on_startup(_) -> None:
     
     
 def start_bot(): 
-    bot = Bot(token=TgKeys.TOKEN)
+    bot = Bot(token=TgKeys.TOKEN, parse_mode='html')
     dp = Dispatcher(bot, storage=MemoryStorage())
 
     register_user_handlers(dp, bot)    

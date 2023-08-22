@@ -1,6 +1,7 @@
 from typing import Dict, List
 
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.utils.callback_data import CallbackData
 
 
 def create_buttons(buttons_name: Dict[int, str]) -> List[InlineKeyboardButton]:
@@ -51,3 +52,14 @@ def update_keyboard():
         InlineKeyboardButton(text='save', callback_data='state_save')
     ]
     return keyboard.row(buttons[0], buttons[1]).row(buttons[2], buttons[3]).add(buttons[-1])
+
+
+# product_index_cb = CallbackData('get_all_products', 'index')
+
+
+def produts_navigation(current_index: int, last: int):
+    # of = InlineKeyboardButton(text=f"{current_index + 1} of {last + 1}"),
+    left = InlineKeyboardButton(text='Previous', callback_data=f"index_{current_index - 1 if current_index - 1 > -1 else 0}")
+    right = InlineKeyboardButton(text='Next', callback_data=f'index_{current_index + 1 if current_index + 1 <= last else last}')
+    ikb = InlineKeyboardMarkup(row_width=1).row(left, right)
+    return ikb

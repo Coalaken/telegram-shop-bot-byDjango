@@ -44,6 +44,9 @@ def register_admin_handlers(dp: Dispatcher, bot: Bot):
         await AdminAddItem.next()
         await message.reply('Add an image')
         
+    async def check_photo(message: Message) -> None:
+        await message.answer('It is really image?')
+        
     async def set_image(message: Message, state: FSMContext) -> None:
         async with state.proxy() as data:
             # print(message.photo[0].file_id)
@@ -51,11 +54,17 @@ def register_admin_handlers(dp: Dispatcher, bot: Bot):
         await AdminAddItem.next()
         await message.reply('Add a description')    
         
+    async def check_desc(message: Message) -> None:
+        await message.answer('Invalid description!')
+        
     async def set_description(message: Message, state: FSMContext) -> None:
         async with state.proxy() as data:
             data['description'] = message.text
         await AdminAddItem.next()
         await message.reply('Set the price')
+        
+    async def check_price(message: Message) -> None:
+        await message.answer('Invalid price! Try again!')   
         
     async def set_price(message: Message, state: FSMContext) -> None:
         async with state.proxy() as data:
@@ -192,11 +201,20 @@ def register_admin_handlers(dp: Dispatcher, bot: Bot):
             await AdminUpdateItem.start.set()
             
     dp.register_message_handler(cancel, Text(equals='cancel', ignore_case=True), state="*")
+    
     dp.register_message_handler(add_item, commands=['add'], state=None)
+    
     dp.register_message_handler(set_name, state=AdminAddItem.name)
+    
+    dp.register_message_handler(check_photo, lambda message: not message.photo[0], state=AdminAddItem.img)
     dp.register_message_handler(set_image, state=AdminAddItem.img, content_types=['photo'])
+    
+    dp.register_message_handler(check_desc, lambda message: not message.text, state=AdminAddItem.description)
     dp.register_message_handler(set_description, state=AdminAddItem.description)
+    
+    dp.register_message_handler(check_price, lambda message: not message.text.isdigit(), state=AdminAddItem.price)
     dp.register_message_handler(set_price, state=AdminAddItem.price)
+    
     dp.register_message_handler(add_category, commands=['create_cat'], state=None)
     dp.register_message_handler(set_category_name, state=AdminAddCat.name, content_types=['text'])
     dp.register_message_handler(edit_items, commands=['edit'])
@@ -219,7 +237,7 @@ def register_admin_handlers(dp: Dispatcher, bot: Bot):
     dp.register_message_handler(save_updates, state=AdminUpdateItem.save)
     
     # TO-DO 
-    # - price validator
-    # - other validators 
+    # - price validator - complete!
+    # - other validators - complete!
     # - docker+
     # - redis Memory
