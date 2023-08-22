@@ -95,6 +95,7 @@ def register_user_handlers(dp: Dispatcher, bot: Bot):
                                      reply_markup=buy_delete_cart(item['id'],
                                                                   message.from_user.id))
         await message.answer(f'Total price:\n{total_price}')
+        await message.delete()
  
     async def add_to_cart(callback_query: CallbackQuery) -> None:
         await callback_query.answer()
@@ -131,6 +132,7 @@ def register_user_handlers(dp: Dispatcher, bot: Bot):
                                  f"\n${products[0]['price']}" +
                                  f'<i>\n{1} of {last + 1}</i>',
                                  reply_markup=produts_navigation(0, last=last))
+        await message.delete()
             
     async def button(callback_query: CallbackQuery) -> None:
         current_index = int(callback_query.data.split('_')[1])
